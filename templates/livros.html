@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Livros doados | Livros Vai na Web{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container">
+        <h1>Livros doados</h1>
+        <p class="lead mb-0">Encontre uma nova leitura para chamar de sua.</p>
+    </div>
+</section>
+<section class="container py-5">
+    {% if busca %}<p class="text-secondary">Resultados para: <strong>{{ busca }}</strong></p>{% endif %}
+    <div class="row g-4">
+        {% for livro in livros %}
+            <div class="col-sm-6 col-lg-4">
+                <article class="book-card card">
+                    <img src="{{ livro.imagem_url or url_for('static', filename='assets/livroDoado.png') }}" class="card-img-top" alt="Capa de {{ livro.titulo }}">
+                    <div class="card-body">
+                        <h2 class="card-title h4">{{ livro.titulo }}</h2>
+                        <p class="card-text mb-1">{{ livro.autor }}</p>
+                        <p class="card-text text-secondary">{{ livro.categoria }}</p>
+                        <a class="btn btn-primary" href="{{ url_for('main.detalhe_livro', livro_id=livro.id) }}">Ver detalhes</a>
+                    </div>
+                </article>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="text-secondary">{% if busca %}Nenhum livro encontrado para esta busca.{% else %}Ainda não há livros disponíveis.{% endif %}</p>
+                <a class="btn btn-primary" href="{{ url_for('main.doar') }}">Quero doar um livro</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

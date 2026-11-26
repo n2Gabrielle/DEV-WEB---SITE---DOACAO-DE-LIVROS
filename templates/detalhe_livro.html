@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ livro.titulo }} | Livros Vai na Web{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container"><p class="mb-2"><a class="link-light" href="{{ url_for('main.listar_livros') }}">Livros doados</a></p><h1>{{ livro.titulo }}</h1></div>
+</section>
+<section class="container py-5">
+    <div class="row g-4 align-items-start">
+        <div class="col-md-5"><img class="img-fluid rounded shadow-sm bg-white p-3" src="{{ livro.imagem_url or url_for('static', filename=fallback_cover) }}" alt="Capa de {{ livro.titulo }}"></div>
+        <div class="col-md-7">
+            <p class="text-secondary mb-1">{{ livro.categoria }}</p>
+            <h2 class="h4">por {{ livro.autor }}</h2>
+            <p>{{ livro.descricao or "Este livro foi compartilhado pela nossa comunidade." }}</p>
+            <p><strong>Status:</strong> {{ "Disponível" if livro.status == "disponivel" else "Solicitado" if livro.status == "solicitado" else "Doado" }}</p>
+            <p><strong>Compartilhado por:</strong> {{ livro.doador.nome }}</p>
+            {% if livro.status == "disponivel" %}
+                <a class="btn btn-primary" href="{{ url_for('main.solicitar_livro', livro_id=livro.id) }}">Solicitar este livro</a>
+            {% else %}
+                <span class="badge text-bg-secondary">Indisponível para novas solicitações</span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
