@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_bootstrap import Bootstrap5
 
 from extensions import db
 import models
@@ -10,6 +11,7 @@ import models
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 load_dotenv(PROJECT_ROOT / ".env")
+
 
 
 def create_app(test_config=None):
@@ -24,6 +26,7 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
+    bootstrap = Bootstrap5(app)
     db.init_app(app)
 
     from routes import main

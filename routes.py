@@ -7,6 +7,8 @@ from sqlalchemy import or_
 from extensions import db
 from models import Doador, Livro, SolicitacaoDoacao
 
+from forms import DoarLivros
+
 
 main = Blueprint("main", __name__)
 FALLBACK_COVER = "assets/livroDoado.png"
@@ -27,6 +29,20 @@ def _form_doador():
         doador.nome = nome
         if telefone:
             doador.telefone = telefone
+    return doador
+
+def _form_doacao(nome, email, telefone):
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        flash("Informe um email válido", "danger")
+        return render_template("doar.html"), 400
+    
+    doador = Doador.query.filter_by(email=email).first()
+    if doador is None:
+        doador = Doador(nome=nome, email=email, telefone=telefone)
+        db.session.add(doador)
+    else:
+        doador.nome = nome
+        doador.telefone = telefone
     return doador
 
 
@@ -70,7 +86,62 @@ def detalhe_livro(livro_id):
     livro = db.get_or_404(Livro, livro_id)
     return render_template("detalhe_livro.html", livro=livro, fallback_cover=FALLBACK_COVER)
 
+#EM CONSTRUÇÃO
+@main.route("/doar", methods=["GET", "POST"])
+def doacao():
+    form = DoarLivros()
+    mensagem = ""
+    if form.validate_on_submit():
+        nome = form.nome.data
+        email = form.email.data
+        telefone = form.telefone.data
+        doador = None
 
+        if nome and email and telefone:
+            doador = _form_doacao(nome, email, telefone)
+        elif nome or email or telefone:
+            flash("Caso deseje informar seus dados preencha todos os campos", "danger")
+            return render_template("doar.html", 400)
+
+        titulo = form.titulo.data
+        if not titulo:
+            flash("Informe um título válido", "danger")
+            return render_template("doar.html"), 400
+
+        autor = form.autor.data
+        if not autor:
+            flash("Informe um autor válido", "danger")
+            return render_template("doar.html"), 400
+
+        categoria = form.categoria.data
+        if not categoria:
+            flash("informe uma categoria válida", "danger")
+            return render_template("doar.html"), 400
+        
+        img_url = form.img_url.data
+        if img_url:
+            if not _valid_image_url(img_url):
+                flash("O link da imagem precisa começar com http:// ou https://.", "danger")
+                return render_template("doar.html"), 400
+
+        descricao = form.descricao.data
+
+        livro = Livro(
+            titulo = titulo,
+            autor = autor,
+            categoria = categoria,
+            imagem_url = img_url or None,
+            descricao = descricao or None,
+            doador = doador or None
+        )
+        db.session.add(livro)
+        db.session.commit()
+
+        flash("Doação cadastrada. Obrigado por compartilhar!", "success")
+        return redirect(url_for("main.detalhe_livro", livro_id=livro.id))
+    return render_template("doar.html", form=form)
+
+'''
 @main.route("/doar", methods=["GET", "POST"])
 def doar():
     if request.method == "POST":
@@ -102,7 +173,7 @@ def doar():
         return redirect(url_for("main.detalhe_livro", livro_id=livro.id))
 
     return render_template("doar.html")
-
+'''
 
 @main.route("/livros/<int:livro_id>/solicitar", methods=["GET", "POST"])
 def solicitar_livro(livro_id):

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from 'bootstrap/form.html' import render_form %}
 
 {% block title %}Quero doar | Livros Vai na Web{% endblock %}
 
@@ -12,11 +13,30 @@
             <img src="{{ url_for('static', filename='assets/formImg.png') }}" alt="">
             <div><h2 class="h3 mb-1">Informações do livro</h2><p class="text-secondary mb-0">Todos os campos são importantes para outros leitores.</p></div>
         </div>
-        <form method="post" action="{{ url_for('main.doar') }}">
+        {{ render_form(form) }}
+        <!--
+        <form method="post" action="{{ url_for('main.doacao') }}">
             <div class="row g-3">
                 <div class="col-md-6"><label class="form-label" for="titulo">Título</label><input class="form-control" id="titulo" name="titulo" maxlength="180" required></div>
                 <div class="col-md-6"><label class="form-label" for="autor">Autor</label><input class="form-control" id="autor" name="autor" maxlength="120" required></div>
-                <div class="col-md-6"><label class="form-label" for="categoria">Categoria</label><input class="form-control" id="categoria" name="categoria" maxlength="80" required></div>
+                <div class="col-md-6"><label class="form-label" for="categoria">Categoria</label>
+                    <select class="form-control" id="categoria" name="categoria">
+                        <option value="romance">Romance</option>
+                        <option value="fantasia">Fantasia</option>
+                        <option value="ficcao-cientifica">Ficção Científica</option>
+                        <option value="suspense">Suspense</option>
+                        <option value="policial">Policial</option>
+                        <option value="terror">Terror</option>
+                        <option value="distopia">Distopia</option>
+                        <option value="aventura">Aventura</option>
+                        <option value="biografia">Biografia / Autobiografia</option>
+                        <option value="desenvolvimento-pessoal">Desenvolvimento Pessoal</option>
+                        <option value="autoajuda">Autoajuda</option>
+                        <option value="cronica">Ensaio / Crônica</option>
+                        <option value="tecnico">Livro Técnico / Acadêmico</option>
+                        <option value="religiao">Religião / Espiritualidade</option>
+                    </select>
+                </div>
                 <div class="col-md-6"><label class="form-label" for="imagem_url">Link da imagem (opcional)</label><input class="form-control" id="imagem_url" name="imagem_url" type="url" placeholder="https://..."></div>
                 <div class="col-12"><label class="form-label" for="descricao">Descrição (opcional)</label><textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea></div>
             </div>
@@ -29,6 +49,7 @@
             </div>
             <button class="btn btn-primary mt-4" type="submit">Cadastrar doação</button>
         </form>
+        -->
     </div>
 </section>
 {% endblock %}

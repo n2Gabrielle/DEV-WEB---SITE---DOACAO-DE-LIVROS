@@ -22,7 +22,7 @@
                     <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Início</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.listar_livros') }}">Livros doados</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.doar') }}">Quero doar</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.doacao') }}">Quero doar</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.sobre') }}">Sobre</a></li>
                     </ul>
                     <form class="search-box d-flex ms-lg-4" role="search" method="get" action="{{ url_for('main.listar_livros') }}">
